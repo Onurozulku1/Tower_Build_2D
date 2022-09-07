@@ -22,10 +22,12 @@ public class AnimationManager : MonoBehaviour
     private void OnEnable()
     {
         GameController.NewBlock += InGameTokenAnim;
+        GameController.PerfectBLock += () => uiAnimator.SetTrigger("perfectText");
     }
 
     private void OnDisable()
     {
         GameController.NewBlock -= InGameTokenAnim;
+        GameController.PerfectBLock -= () => uiAnimator.SetTrigger("perfectText");
     }
 }

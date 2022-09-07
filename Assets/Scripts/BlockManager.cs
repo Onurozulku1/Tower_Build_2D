@@ -19,8 +19,15 @@ public class BlockManager : MonoBehaviour
     private float colorCounter = 1;
 
     private float gapX;
-    private float lastPosX;
+    public float lastPosX;
     private Vector3 lastSize;
+    public float LastX
+    {
+        get
+        {
+            return lastSize.x;
+        }
+    }
 
     [HideInInspector] public float posY;
 
@@ -42,7 +49,7 @@ public class BlockManager : MonoBehaviour
         instance = this;
 
         posY = block.transform.localScale.y - 4;
-
+        
 
         horzExtent = Camera.main.orthographicSize * Screen.width / Screen.height;
         currentSpeed = startSpeed;
@@ -140,10 +147,12 @@ public class BlockManager : MonoBehaviour
             //PERFECT BLOCK
             perfectBlock = true;
             currentBlock.transform.position = new Vector3(recentBlock.transform.position.x, currentBlock.transform.position.y, 0);
+            GameController.PerfectBLock?.Invoke();
         }
         else
         {
             perfectBlock = false;
+            GameController.instance.perfectComboAmount = 0;
 
         }
     }

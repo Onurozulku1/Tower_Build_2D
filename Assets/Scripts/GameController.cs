@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public static Action GameEnding;
     public static Action NewBlock;
+    public static Action PerfectBLock;
+
+    public int perfectComboAmount = 0;
 
     public int score = 0;
     public int continuePrice = 200;
@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
     [HideInInspector] public BlockManager bm;
 
     public static GameController instance;
+
+    public int denemeSilinecekDegisken = 0;
     private void Awake()
     {
         instance = this;
@@ -23,6 +25,8 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        denemeSilinecekDegisken++; 
+
         bm = BlockManager.instance;
         bm.enabled = false;
         score = 0;
@@ -37,6 +41,7 @@ public class GameController : MonoBehaviour
     {
         NewBlock += () => score++;
         NewBlock += () => UIManager.instance.scoreTexts[2].text = score.ToString();
+        PerfectBLock += () => perfectComboAmount++;
         GameEnding += DisplayContinueButton;
     }
 
@@ -44,6 +49,7 @@ public class GameController : MonoBehaviour
     {
         NewBlock -= () => score++;
         NewBlock -= () => UIManager.instance.scoreTexts[2].text = score.ToString();
+        PerfectBLock -= () => perfectComboAmount++;
         GameEnding -= DisplayContinueButton;
     }
 
@@ -51,6 +57,7 @@ public class GameController : MonoBehaviour
     {
         GameEnding = null;
         NewBlock = null;
+        PerfectBLock = null;
     }
 
     private void DisplayContinueButton()

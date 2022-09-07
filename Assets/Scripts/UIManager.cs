@@ -8,6 +8,16 @@ public class UIManager : MonoBehaviour
 {
     public GameObject[] MenuPanels;
     public GameObject ContinueButton;
+    public Text perfectComboText;
+    private Vector2 PerfectComboTextRandomPos
+    {
+        get
+        {
+            float x = Random.Range(-175, 175);
+            float y = Random.Range(0, 300);
+            return new Vector3(x, y, 0);
+        }
+    }
 
     [Header("Score & Token Elements")]
     public Text[] scoreTexts;
@@ -18,6 +28,7 @@ public class UIManager : MonoBehaviour
     public Image audioImage;
     public Sprite[] audioSprites;
 
+    
 
     public static UIManager instance;
     private void Awake()
@@ -46,17 +57,7 @@ public class UIManager : MonoBehaviour
 
         OpenPanel(1);
     }
-
-    private void OnEnable()
-    {
-        GameController.GameEnding += UpdateEndingScores;
-    }
-
-    private void OnDisable()
-    {
-        GameController.GameEnding -= UpdateEndingScores;
-    }
-
+    
     public void MainMenu()
     {
         BlockManager.instance.ResetGame();
@@ -93,5 +94,23 @@ public class UIManager : MonoBehaviour
 
         }
 
+    }
+
+    public void SetPerfectBlockText()
+    {
+        perfectComboText.transform.SetPositionAndRotation(PerfectComboTextRandomPos, Quaternion.Euler(Vector3.forward * Random.Range(-10, 10)));
+        perfectComboText.transform.localPosition = PerfectComboTextRandomPos;
+    }
+
+    private void OnEnable()
+    {
+        GameController.GameEnding += UpdateEndingScores;
+        GameController.PerfectBLock += SetPerfectBlockText;
+    }
+
+    private void OnDisable()
+    {
+        GameController.GameEnding -= UpdateEndingScores;
+        GameController.PerfectBLock -= SetPerfectBlockText;
     }
 }

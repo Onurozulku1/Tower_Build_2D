@@ -11,6 +11,21 @@ public class Cloud : MonoBehaviour
 
     private SpriteRenderer sr;
     private Color baseColor;
+
+    private void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+        baseColor = sr.color;
+        speed = baseSpeed + Random.Range(0, 10) * 0.1f;
+        float sizeValue;
+        sizeValue = Mathf.Clamp(speed / 1.2f, 0.2f, 1);
+        sr.sortingOrder = Mathf.RoundToInt(sizeValue * 100);
+        transform.localScale = sizeValue * Vector2.one;
+        baseColor.a = sizeValue * .4f + 0.6f;
+        //sr.color = baseColor;
+        GameController.NewBlock += VerticalPass;
+    }
+
     private void Start()
     {
         speed = baseSpeed + Random.Range(0, 10) * 0.1f;
@@ -33,7 +48,7 @@ public class Cloud : MonoBehaviour
 
     private bool HorizontalPass()
     {
-        return transform.position.x + transform.localScale.x < -horzExtent * 1.3f;
+        return transform.position.x < -horzExtent * 1.6f;
     }
 
     private void VerticalPass()
@@ -48,15 +63,7 @@ public class Cloud : MonoBehaviour
 
     private void OnEnable()
     {
-        sr = GetComponent<SpriteRenderer>();
-        baseColor = sr.color;
-        speed = baseSpeed + Random.Range(0, 10) * 0.1f;
-        float sizeValue;
-        sizeValue = Mathf.Clamp(speed / 1.2f, 0.2f, 1);
-        transform.localScale = sizeValue * Vector2.one;
-        baseColor.a = sizeValue * .4f + 0.6f;
-        //sr.color = baseColor;
-        GameController.NewBlock += VerticalPass;
+        
     }
 
     private void OnDisable()
