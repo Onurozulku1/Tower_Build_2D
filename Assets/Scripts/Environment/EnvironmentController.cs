@@ -38,7 +38,7 @@ public class EnvironmentController : MonoBehaviour
 
     public float RandomY { get
         {
-            return Random.Range(-vertExtent * 0.8f, vertExtent * 4) + Camera.main.transform.position.y + vertExtent * .7f;
+            return Random.Range(-vertExtent * 0.8f, vertExtent * 5) + Camera.main.transform.position.y + vertExtent * .7f;
         } }
 
     public Vector2 RandomCloudPosition()

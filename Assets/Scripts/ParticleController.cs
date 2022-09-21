@@ -18,7 +18,7 @@ public class ParticleController : MonoBehaviour
         Vector3 particlePos = transform.position;
         particlePos.y = BlockManager.instance.posY;
         particlePos.x = BlockManager.instance.lastPosX;
-        perfectParticle.transform.localScale = new Vector2(BlockManager.instance.LastX * 0.5f, transform.localScale.y);
+        perfectParticle.transform.localScale = 0.5f * BlockManager.instance.LastX * Vector2.one;
         transform.position = particlePos;
         perfectParticle.Play();
     }

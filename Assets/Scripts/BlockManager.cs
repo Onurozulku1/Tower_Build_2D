@@ -41,6 +41,7 @@ public class BlockManager : MonoBehaviour
     private GameObject recentBlock;
     private GameObject fallingBlock;
 
+    private readonly float unvaluedSize = .03f;
 
 
     public static BlockManager instance;
@@ -127,7 +128,7 @@ public class BlockManager : MonoBehaviour
     {
         gapX = currentBlock.transform.position.x - recentBlock.transform.position.x;
 
-        if (Mathf.Abs(gapX) > lastSize.x)
+        if (Mathf.Abs(gapX) > lastSize.x - unvaluedSize)
         {
             return true;
         }
@@ -160,7 +161,7 @@ public class BlockManager : MonoBehaviour
     public void AdjustBlock()
     {
         if (currentSpeed < maxSpeed)
-            currentSpeed += 0.1f;
+            currentSpeed += 0.05f;
 
         lastSize.x -= Mathf.Abs(gapX);
         lastPosX = recentBlock.transform.position.x + (gapX * 0.5f);
@@ -208,7 +209,7 @@ public class BlockManager : MonoBehaviour
         fallingColor = sr.color;
         fallingColor.a = colorCounter;
         sr.color = fallingColor;
-        fallingObject.transform.position += 0.03f * colorCounter * Vector3.down;
+        fallingObject.transform.position += 6f * colorCounter * Time.deltaTime * Vector3.down;
     }
 
     public void MoveBlock()
@@ -247,7 +248,6 @@ public class BlockManager : MonoBehaviour
     {
         Camera.main.transform.position = new Vector3(0, 0, -10);
         GameController.instance.score = 0;
-        UIManager.instance.ContinueButton.SetActive(false);
 
         for (int i = 0; i < blockParent.transform.childCount; i++)
         {
@@ -261,6 +261,9 @@ public class BlockManager : MonoBehaviour
         posY = block.transform.localScale.y - 4;
         lastSize = MainBlock.transform.localScale;
         GameController.instance.isContinued = false;
+
+        if (GoogleAdsManager.instance!=null)
+            GoogleAdsManager.instance.RequestAndLoadRewardedAd();
     }
 
     public void StartGame()
@@ -270,6 +273,10 @@ public class BlockManager : MonoBehaviour
 
         posY = MainBlock.transform.position.y + block.transform.localScale.y;
         currentBlock = Instantiate(block, new Vector2(-BlockTime - 4.2f, posY), Quaternion.identity, blockParent);
+
+       
+        if (GoogleAdsManager.instance != null)
+            GoogleAdsManager.instance.RequestAndLoadInterstitialAd();
     }
 
     private void PrepareUI()
@@ -286,11 +293,13 @@ public class BlockManager : MonoBehaviour
         fail = false;
         currentBlock.transform.position = new Vector2(-BlockTime - 4.2f, posY);
 
-        MarketManager.token -= GameController.instance.continuePrice;
+        if (MarketManager.token>= GameController.instance.continuePrice)
+        {
+            MarketManager.token -= GameController.instance.continuePrice;
+        }
         PlayerPrefs.SetInt("token", MarketManager.token);
         UIManager.instance.inGameTokenText.text = MarketManager.token.ToString();
         GameController.instance.isContinued = true;
-        UIManager.instance.ContinueButton.SetActive(false);
 
     }
 }

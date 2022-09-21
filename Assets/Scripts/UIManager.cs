@@ -7,14 +7,18 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameObject[] MenuPanels;
-    public GameObject ContinueButton;
+    public GameObject ContinuePanel;
+    public GameObject TokenContinueButton;
     public Text perfectComboText;
+
+    public GameObject removeAdsObject;
+
     private Vector2 PerfectComboTextRandomPos
     {
         get
         {
-            float x = Random.Range(-175, 175);
-            float y = Random.Range(0, 300);
+            float x = Random.Range(-150, 150);
+            float y = Random.Range(-50, 300);
             return new Vector3(x, y, 0);
         }
     }
@@ -40,7 +44,12 @@ public class UIManager : MonoBehaviour
     {
         inGameTokenText.text = PlayerPrefs.GetInt("token").ToString();
         scoreTexts[3].text = "High Score : " + PlayerPrefs.GetInt("highScore").ToString();
-        ContinueButton.SetActive(false);
+
+        if (PlayerPrefs.GetInt("removeAds") == 0)
+            removeAdsObject.SetActive(true);
+        else
+            Destroy(removeAdsObject); 
+
     }
 
     public void UpdateEndingScores()
@@ -67,6 +76,9 @@ public class UIManager : MonoBehaviour
 
     public void OpenPanel(int index)
     {
+        if (removeAdsObject != null && PlayerPrefs.GetInt("removeAds") == 1)
+                Destroy(removeAdsObject);
+
         foreach (GameObject item in MenuPanels)
         {
             item.SetActive(false);
@@ -98,19 +110,50 @@ public class UIManager : MonoBehaviour
 
     public void SetPerfectBlockText()
     {
-        perfectComboText.transform.SetPositionAndRotation(PerfectComboTextRandomPos, Quaternion.Euler(Vector3.forward * Random.Range(-10, 10)));
-        perfectComboText.transform.localPosition = PerfectComboTextRandomPos;
+        Vector2 pos = PerfectComboTextRandomPos;
+        perfectComboText.transform.rotation = Quaternion.Euler(Mathf.Sign(pos.x) * Random.Range(9, 10) * Vector3.forward);
+        perfectComboText.transform.localPosition = pos;
     }
+
+    private void DisplayContinuePanel()
+    {
+
+        if (GameController.instance.isContinued)
+        {
+            ContinuePanel.SetActive(false);
+            return;
+        }
+
+        ContinuePanel.SetActive(true);
+
+        if (PlayerPrefs.GetInt("token") < GameController.instance.continuePrice)
+        {
+            TokenContinueButton.SetActive(false);
+        }
+        else
+        {
+            TokenContinueButton.SetActive(true);
+        }
+
+    }
+
+
+
+
 
     private void OnEnable()
     {
         GameController.GameEnding += UpdateEndingScores;
+        GameController.GameEnding += DisplayContinuePanel;
+
         GameController.PerfectBLock += SetPerfectBlockText;
     }
 
     private void OnDisable()
     {
         GameController.GameEnding -= UpdateEndingScores;
+        GameController.GameEnding -= DisplayContinuePanel;
+
         GameController.PerfectBLock -= SetPerfectBlockText;
     }
 }

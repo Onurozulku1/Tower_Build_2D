@@ -17,7 +17,6 @@ public class GameController : MonoBehaviour
 
     public static GameController instance;
 
-    public int denemeSilinecekDegisken = 0;
     private void Awake()
     {
         instance = this;
@@ -25,7 +24,6 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        denemeSilinecekDegisken++; 
 
         bm = BlockManager.instance;
         bm.enabled = false;
@@ -42,7 +40,6 @@ public class GameController : MonoBehaviour
         NewBlock += () => score++;
         NewBlock += () => UIManager.instance.scoreTexts[2].text = score.ToString();
         PerfectBLock += () => perfectComboAmount++;
-        GameEnding += DisplayContinueButton;
     }
 
     private void OnDisable()
@@ -50,7 +47,6 @@ public class GameController : MonoBehaviour
         NewBlock -= () => score++;
         NewBlock -= () => UIManager.instance.scoreTexts[2].text = score.ToString();
         PerfectBLock -= () => perfectComboAmount++;
-        GameEnding -= DisplayContinueButton;
     }
 
     private void OnDestroy()
@@ -60,12 +56,5 @@ public class GameController : MonoBehaviour
         PerfectBLock = null;
     }
 
-    private void DisplayContinueButton()
-    {
-
-        if (PlayerPrefs.GetInt("token") >= continuePrice && !isContinued)
-        {
-            UIManager.instance.ContinueButton.SetActive(true);
-        }
-    }
+    
 }
