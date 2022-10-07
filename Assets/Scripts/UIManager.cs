@@ -137,10 +137,6 @@ public class UIManager : MonoBehaviour
 
     }
 
-
-
-
-
     private void OnEnable()
     {
         GameController.GameEnding += UpdateEndingScores;

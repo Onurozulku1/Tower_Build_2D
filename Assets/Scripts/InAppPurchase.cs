@@ -8,8 +8,7 @@ public class InAppPurchase : MonoBehaviour
 
     private void Awake()
     {
-        gam = GetComponent<GoogleAdsManager>();
-
+        gam = GoogleAdsManager.instance;
     }
 
     public void RemoveAds()

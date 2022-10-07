@@ -43,6 +43,7 @@ public class BlockManager : MonoBehaviour
 
     private readonly float unvaluedSize = .03f;
 
+    private float boundary;
 
     public static BlockManager instance;
     private void Awake()
@@ -54,6 +55,8 @@ public class BlockManager : MonoBehaviour
 
         horzExtent = Camera.main.orthographicSize * Screen.width / Screen.height;
         currentSpeed = startSpeed;
+
+        boundary = horzExtent + (currentBlock.transform.localScale.x * -0.5f;
     }
 
     private void Update()
@@ -219,7 +222,7 @@ public class BlockManager : MonoBehaviour
 
         if (!onDestination)
         {
-            if (currentBlock.transform.position.x < horzExtent + (currentBlock.transform.localScale.x * -0.5f))
+            if (currentBlock.transform.position.x < boundary)
             {
                 currentBlock.transform.position += currentSpeed * Time.deltaTime * Vector3.right;
             }

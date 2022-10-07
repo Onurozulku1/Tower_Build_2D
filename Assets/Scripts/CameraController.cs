@@ -12,8 +12,6 @@ public class CameraController : MonoBehaviour
 
         posVector = new Vector3(0, BlockManager.instance.posY + 1, -10);
         transform.position = Vector3.Lerp(transform.position, posVector, Time.deltaTime * 3);
-
-
         
     }
 
